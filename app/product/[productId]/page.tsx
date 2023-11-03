@@ -1,9 +1,19 @@
+import { Container } from "@/app/components"
+import ProductDetails from "./ProductDetails"
+import { product } from "@/utils/product"
+
 interface IParams {
 	productId?: string
 }
 
 const Product = ({ params }: { params: IParams }) => {
-	return <div>Product page</div>
+	return (
+		<div className="p-8">
+			<Container>
+				<ProductDetails product={product} />
+			</Container>
+		</div>
+	)
 }
 
 export default Product

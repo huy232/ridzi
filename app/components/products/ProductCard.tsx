@@ -1,10 +1,9 @@
 "use client"
 
-import { formatPrice, truncateText } from "@/utils/"
+import { formatPrice, productRating, truncateText } from "@/utils/"
 import { Rating } from "@mui/material"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { FC } from "react"
 
 interface ProductCardProps {
@@ -12,12 +11,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: FC<ProductCardProps> = ({ data }) => {
-	const router = useRouter()
-
-	const productRating =
-		data.reviews.reduce((acc: number, item: any) => item.rating + acc, 0) /
-		data.reviews.length
-
+	const reviewsLength = data.reviews.length | 0
 	return (
 		<Link
 			href={`/product/${data.id}`}
@@ -34,9 +28,9 @@ const ProductCard: FC<ProductCardProps> = ({ data }) => {
 				</div>
 				<div className="mt-4 h-[50px] line-clamp-2">{data.name}</div>
 				<div>
-					<Rating value={productRating} readOnly />
+					<Rating value={productRating(data)} readOnly />
 				</div>
-				<div>{data.reviews.length} reviews</div>
+				<div>{reviewsLength} reviews</div>
 				<div className="font-semibold">{formatPrice(data.price)}</div>
 			</div>
 		</Link>
