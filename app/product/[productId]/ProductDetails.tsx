@@ -1,9 +1,10 @@
 "use client"
 
+import { Button, ProductImage, SetColor, SetQuantity } from "@/app/components"
 import { productRating } from "@/utils"
 import { Rating } from "@mui/material"
 import clsx from "clsx"
-import { FC, useState } from "react"
+import { FC, useState, useCallback } from "react"
 interface ProductDetailsProps {
 	product: any
 }
@@ -42,12 +43,46 @@ const ProductDetails: FC<ProductDetailsProps> = ({ product }) => {
 		quantity: 1,
 		price,
 	})
-
 	const reviewsLength = product.reviews.length | 0
 	const inStockStatus = clsx(inStock ? "text-teal-400" : "text-rose-400")
+
+	const handleColorSelect = useCallback(
+		(value: SelectedImgType) => {
+			setCartProduct((prev) => {
+				return { ...prev, selectedImg: value }
+			})
+		},
+		[cartProduct.selectedImg]
+	)
+
+	const handleQuantityIncrease = useCallback(() => {
+		setCartProduct((prev) => {
+			return {
+				...prev,
+				quantity: prev.quantity + 1,
+			}
+		})
+	}, [cartProduct.quantity])
+
+	const handleQuantityDecrease = useCallback(() => {
+		if (cartProduct.quantity === 1) {
+			return
+		}
+		setCartProduct((prev) => {
+			return {
+				...prev,
+				quantity: prev.quantity - 1,
+			}
+		})
+	}, [cartProduct.quantity])
+
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-			<div>Images</div>
+			<ProductImage
+				cartProduct={cartProduct}
+				product={product}
+				handleColorSelect={handleColorSelect}
+			/>
 			<div className="flex flex-col gap-1 text-slate-500 text-sm">
 				<h2 className="text-3xl font-medium text-slate-700">{product.name}</h2>
 				<div className="flex items-center">
@@ -69,11 +104,23 @@ const ProductDetails: FC<ProductDetailsProps> = ({ product }) => {
 					{inStock ? "In stock" : "Out of stock"}
 				</div>
 				<Horizontal />
-				<div>Color</div>
+				<div>
+					<SetColor
+						cartProduct={cartProduct}
+						images={images}
+						handleColorSelect={handleColorSelect}
+					/>
+				</div>
 				<Horizontal />
-				<div>Quantity</div>
+				<SetQuantity
+					cartProduct={cartProduct}
+					handleQuantityIncrease={handleQuantityIncrease}
+					handleQuantityDecrease={handleQuantityDecrease}
+				/>
 				<Horizontal />
-				<div>Add to cart</div>
+				<div className="max-w-[300px]">
+					<Button label="Add to cart" onClick={() => {}} />
+				</div>
 			</div>
 		</div>
 	)
