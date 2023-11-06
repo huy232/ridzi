@@ -11,7 +11,7 @@ interface ButtonProps {
 	small?: boolean
 	custom?: string
 	icon?: IconType
-	onClick: (e: MouseEvent<HTMLButtonElement>) => void
+	onClick?: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
 const Button: FC<ButtonProps> = ({
@@ -32,7 +32,7 @@ const Button: FC<ButtonProps> = ({
 		custom
 	)
 	return (
-		<button disabled={disabled} className={buttonClass}>
+		<button onClick={onClick} disabled={disabled} className={buttonClass}>
 			{Icon && <Icon size={24} />} {label}
 		</button>
 	)

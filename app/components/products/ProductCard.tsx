@@ -1,6 +1,6 @@
 "use client"
 
-import { formatPrice, productRating, truncateText } from "@/utils/"
+import { formatPrice, productRating } from "@/utils/"
 import { Rating } from "@mui/material"
 import Image from "next/image"
 import Link from "next/link"

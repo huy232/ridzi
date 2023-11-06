@@ -8,6 +8,8 @@ import SetColor from "./products/SetColor"
 import SetQuantity from "./products/SetQuantity"
 import Button from "./Button"
 import ProductImage from "./products/ProductImage"
+import Heading from "./Heading"
+import Avatar from "./Avatar"
 
 export {
 	Navbar,
@@ -20,4 +22,6 @@ export {
 	SetQuantity,
 	Button,
 	ProductImage,
+	Heading,
+	Avatar,
 }
