@@ -59,9 +59,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({ product }) => {
 			)
 			if (existingIndex > -1) {
 				setIsProductInCart(true)
+				setProductLoading(false)
 			}
 		}
-		setProductLoading(false)
 	}, [cartProducts, product.id])
 
 	const handleColorSelect = useCallback((value: SelectedImgType) => {
@@ -118,6 +118,7 @@ const ProductDetails: FC<ProductDetailsProps> = ({ product }) => {
 					{inStock ? "In stock" : "Out of stock"}
 				</div>
 				<Horizontal />
+
 				{!productLoading &&
 					(isProductInCart ? (
 						<>

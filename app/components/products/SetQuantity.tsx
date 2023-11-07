@@ -21,7 +21,7 @@ const SetQuantity: FC<SetQuantityProps> = ({
 
 	return (
 		<div className="flex gap-8 items-center">
-			{!!cartCounter && <div className="font-semibold uppercase">Quantity</div>}
+			{cartCounter && <div className="font-semibold uppercase">Quantity</div>}
 			<div className="flex gap-4 items-center text-base">
 				<button onClick={handleQuantityDecrease} className={btnStyles}>
 					-
