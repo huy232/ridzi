@@ -6,12 +6,18 @@ import { formatPrice } from "@/utils"
 import Link from "next/link"
 import Image from "next/image"
 import { SetQuantity } from "../components"
+import { useCart } from "@/hooks/useCart"
 
 interface ItemContentProps {
 	item: CartProductType
 }
 
 const ItemContent: FC<ItemContentProps> = ({ item }) => {
+	const {
+		handleRemoveProductFromCart,
+		handleCartQuantityIncrease,
+		handleCartQuantityDecrease,
+	} = useCart()
 	return (
 		<div className="grid grid-cols-5 text-xs md:text-sm gap-4 border-t-[1px] border-slate-200 py-4 items-center">
 			<div className="col-span-2 justify-self-start flex gap-2 md:gap-4">
@@ -31,7 +37,12 @@ const ItemContent: FC<ItemContentProps> = ({ item }) => {
 					</Link>
 					<div>{item.selectedImg.color}</div>
 					<div className="w-[70px]">
-						<button className="text-slate-500" onClick={() => {}}>
+						<button
+							className="text-slate-500"
+							onClick={() => {
+								handleRemoveProductFromCart(item)
+							}}
+						>
 							Remove
 						</button>
 					</div>
@@ -41,8 +52,12 @@ const ItemContent: FC<ItemContentProps> = ({ item }) => {
 			<div className="justify-self-center">
 				<SetQuantity
 					cartProduct={item}
-					handleQuantityIncrease={() => {}}
-					handleQuantityDecrease={() => {}}
+					handleQuantityIncrease={() => {
+						handleCartQuantityIncrease(item)
+					}}
+					handleQuantityDecrease={() => {
+						handleCartQuantityDecrease(item)
+					}}
 				/>
 			</div>
 			<div className="justify-self-end font-semibold">

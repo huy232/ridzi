@@ -12,6 +12,9 @@ type CartContextType = {
 	cartTotalQuantity: number
 	cartProducts: CartProductType[] | null
 	handleAddProductToCart: (product: CartProductType) => void
+	handleRemoveProductFromCart: (product: CartProductType) => void
+	handleCartQuantityIncrease: (product: CartProductType) => void
+	handleCartQuantityDecrease: (product: CartProductType) => void
 }
 
 export const CartContext = createContext<CartContextType | null>(null)
@@ -47,10 +50,73 @@ export const CartContextProvider = (props: Props) => {
 		})
 	}, [])
 
+	const handleRemoveProductFromCart = useCallback(
+		(product: CartProductType) => {
+			if (cartProducts) {
+				const filterProducts = cartProducts.filter((item) => {
+					item.id !== product.id
+				})
+				setCartProducts(filterProducts)
+				toast.success("Product removed")
+				localStorage.setItem("cartItems", JSON.stringify(filterProducts))
+			}
+		},
+		[cartProducts]
+	)
+
+	const handleCartQuantityIncrease = useCallback(
+		(product: CartProductType) => {
+			let updatedCart
+			if (product.quantity === 99) {
+				return toast.error("Maximum quantity limit.")
+			}
+			if (cartProducts) {
+				updatedCart = [...cartProducts]
+
+				const existingIndex = cartProducts.findIndex(
+					(item) => item.id === product.id
+				)
+				if (existingIndex > -1) {
+					updatedCart[existingIndex].quantity =
+						updatedCart[existingIndex].quantity + 1
+				}
+				setCartProducts(updatedCart)
+				localStorage.setItem("cartItems", JSON.stringify(updatedCart))
+			}
+		},
+		[cartProducts]
+	)
+
+	const handleCartQuantityDecrease = useCallback(
+		(product: CartProductType) => {
+			let updatedCart
+			if (product.quantity === 1) {
+				return toast.error("Minimum quantity limit.")
+			}
+			if (cartProducts) {
+				updatedCart = [...cartProducts]
+
+				const existingIndex = cartProducts.findIndex(
+					(item) => item.id === product.id
+				)
+				if (existingIndex > -1) {
+					updatedCart[existingIndex].quantity =
+						updatedCart[existingIndex].quantity - 1
+				}
+				setCartProducts(updatedCart)
+				localStorage.setItem("cartItems", JSON.stringify(updatedCart))
+			}
+		},
+		[cartProducts]
+	)
+
 	const value = {
 		cartTotalQuantity,
 		cartProducts,
 		handleAddProductToCart,
+		handleRemoveProductFromCart,
+		handleCartQuantityIncrease,
+		handleCartQuantityDecrease,
 	}
 
 	return <CartContext.Provider value={value} {...props} />
