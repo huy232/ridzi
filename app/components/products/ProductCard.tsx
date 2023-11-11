@@ -11,7 +11,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: FC<ProductCardProps> = ({ data }) => {
-	const reviewsLength = data.reviews.length | 0
+	const reviewsLength = data.reviews.length
 	return (
 		<Link
 			href={`/product/${data.id}`}

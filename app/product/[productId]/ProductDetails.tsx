@@ -36,9 +36,8 @@ const Horizontal = () => {
 const ProductDetails: FC<ProductDetailsProps> = ({ product }) => {
 	const { id, name, description, category, brand, images, price, inStock } =
 		product
-	const { handleAddProductToCart, cartProducts } = useCart()
-	const [isProductInCart, setIsProductInCart] = useState(false)
-	const [productLoading, setProductLoading] = useState(true)
+
+	const { handleAddProductToCart, cartProducts, loadingProducts } = useCart()
 	const [cartProduct, setCartProduct] = useState<CartProductType>({
 		id,
 		name,
@@ -49,20 +48,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({ product }) => {
 		quantity: 1,
 		price,
 	})
+
 	const reviewsLength = product.reviews.length | 0
 	const inStockStatus = clsx(inStock ? "text-teal-400" : "text-rose-400")
-
-	useEffect(() => {
-		if (cartProducts) {
-			const existingIndex = cartProducts.findIndex(
-				(item) => item.id === product.id
-			)
-			if (existingIndex > -1) {
-				setIsProductInCart(true)
-			}
-		}
-		setProductLoading(false)
-	}, [cartProducts, product.id])
 
 	const handleColorSelect = useCallback((value: SelectedImgType) => {
 		setCartProduct((prev) => {
@@ -90,6 +78,50 @@ const ProductDetails: FC<ProductDetailsProps> = ({ product }) => {
 			}
 		})
 	}, [cartProduct.quantity])
+
+	let productStatus
+	if (cartProducts) {
+		const existingIndex = cartProducts.findIndex(
+			(item) => item.id === product.id
+		)
+		if (existingIndex > -1) {
+			productStatus = (
+				<>
+					<p className="mb-2 text-slate-500 flex items-center gap-1">
+						<MdCheckCircle className="text-teal-400" size={20} />
+						<span>Product added to cart</span>
+					</p>
+					<Link href={"/cart"} className="max-w-[300px]">
+						<Button label="View cart" outline />
+					</Link>
+				</>
+			)
+		} else {
+			productStatus = (
+				<>
+					<SetColor
+						cartProduct={cartProduct}
+						images={images}
+						handleColorSelect={handleColorSelect}
+					/>
+					<Horizontal />
+					<SetQuantity
+						cartProduct={cartProduct}
+						handleQuantityIncrease={handleQuantityIncrease}
+						handleQuantityDecrease={handleQuantityDecrease}
+					/>
+					<Horizontal />
+					<div className="max-w-[300px]">
+						<Button
+							label="Add to cart"
+							onClick={() => handleAddProductToCart(cartProduct)}
+						/>
+					</div>
+				</>
+			)
+		}
+	}
+
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 			<ProductImage
@@ -119,39 +151,16 @@ const ProductDetails: FC<ProductDetailsProps> = ({ product }) => {
 				</div>
 				<Horizontal />
 
-				{!productLoading &&
-					(isProductInCart ? (
-						<>
-							<p className="mb-2 text-slate-500 flex items-center gap-1">
-								<MdCheckCircle className="text-teal-400" size={20} />
-								<span>Product added to cart</span>
-							</p>
-							<Link href={"/cart"} className="max-w-[300px]">
-								<Button label="View cart" outline />
-							</Link>
-						</>
-					) : (
-						<>
-							<SetColor
-								cartProduct={cartProduct}
-								images={images}
-								handleColorSelect={handleColorSelect}
-							/>
-							<Horizontal />
-							<SetQuantity
-								cartProduct={cartProduct}
-								handleQuantityIncrease={handleQuantityIncrease}
-								handleQuantityDecrease={handleQuantityDecrease}
-							/>
-							<Horizontal />
-							<div className="max-w-[300px]">
-								<Button
-									label="Add to cart"
-									onClick={() => handleAddProductToCart(cartProduct)}
-								/>
-							</div>
-						</>
-					))}
+				{loadingProducts ? (
+					<>
+						<Horizontal />
+						<div className="max-w-[300px]">
+							<Button loading disabled />
+						</div>
+					</>
+				) : (
+					productStatus
+				)}
 			</div>
 		</div>
 	)

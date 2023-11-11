@@ -14,7 +14,7 @@ const ListRating: FC<ListRatingProps> = ({ product }) => {
 		<div>
 			<Heading title="Product review" />
 			<div className="text-sm mt-2">
-				{!!product.reviews &&
+				{product.reviews &&
 					product.reviews.map((review: any) => {
 						return (
 							<div key={review.id} className="max-w-[320px]">

@@ -5,9 +5,10 @@ import Link from "next/link"
 import { MdArrowBack } from "react-icons/md"
 import { Button, Heading } from "../components"
 import ItemContent from "./ItemContent"
+import { formatPrice } from "@/utils"
 
 const CartClient = () => {
-	const { cartProducts } = useCart()
+	const { cartProducts, handleClearCart, cartTotalAmount } = useCart()
 
 	if (!cartProducts || cartProducts.length === 0) {
 		return (
@@ -36,19 +37,26 @@ const CartClient = () => {
 				<div className="justify-self-end">Total</div>
 			</div>
 			<div>
-				{!!cartProducts &&
+				{cartProducts &&
 					cartProducts.map((item) => {
 						return <ItemContent key={item.id} item={item} />
 					})}
 			</div>
 			<div className="border-t-[1px] border-slate-200 py-4 flex justify-between gap-4">
 				<div className="w-fit">
-					<Button label="Clear cart" onClick={() => {}} small outline />
+					<Button
+						label="Clear cart"
+						onClick={() => {
+							handleClearCart()
+						}}
+						small
+						outline
+					/>
 				</div>
 				<div className="text-sm flex flex-col gap-1 items-start">
 					<div className="flex justify-between w-full text-base font-semibold">
 						<span>Subtotal</span>
-						<span>{"$1,000"}</span>
+						<span>{formatPrice(cartTotalAmount)}</span>
 					</div>
 					<p className="text-slate-500">
 						Taxes and shipping calculate at checkout

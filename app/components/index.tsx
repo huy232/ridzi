@@ -10,6 +10,9 @@ import Button from "./Button"
 import ProductImage from "./products/ProductImage"
 import Heading from "./Heading"
 import Avatar from "./Avatar"
+import CartCount from "./nav/CartCount"
+import FormWrap from "./FormWrap"
+import Input from "./inputs/Input"
 
 export {
 	Navbar,
@@ -24,4 +27,7 @@ export {
 	ProductImage,
 	Heading,
 	Avatar,
+	CartCount,
+	FormWrap,
+	Input,
 }

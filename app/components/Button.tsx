@@ -3,15 +3,17 @@
 import { IconType } from "react-icons/lib"
 import { FC, MouseEvent } from "react"
 import clsx from "clsx"
+import { AiOutlineLoading3Quarters } from "react-icons/ai"
 
 interface ButtonProps {
-	label: string
+	label?: string
 	disabled?: boolean
 	outline?: boolean
 	small?: boolean
 	custom?: string
 	icon?: IconType
 	onClick?: (e: MouseEvent<HTMLButtonElement>) => void
+	loading?: boolean
 }
 
 const Button: FC<ButtonProps> = ({
@@ -22,6 +24,7 @@ const Button: FC<ButtonProps> = ({
 	custom,
 	icon: Icon,
 	onClick,
+	loading,
 }) => {
 	const buttonClass = clsx(
 		"disabled:opacity-70 disabled:cursor-not-allowed rounded-md hover:opacity-80 transition w-full border-slate-700 flex items-center justify-center gap-2",
@@ -33,7 +36,13 @@ const Button: FC<ButtonProps> = ({
 	)
 	return (
 		<button onClick={onClick} disabled={disabled} className={buttonClass}>
-			{Icon && <Icon size={24} />} {label}
+			{loading ? (
+				<AiOutlineLoading3Quarters className="animate-spin" size={24} />
+			) : (
+				<>
+					{Icon && <Icon size={24} />} {label}
+				</>
+			)}
 		</button>
 	)
 }
