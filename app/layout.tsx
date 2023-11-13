@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 	description: "Ridzi's homepage",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode

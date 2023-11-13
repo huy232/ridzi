@@ -13,6 +13,8 @@ import Avatar from "./Avatar"
 import CartCount from "./nav/CartCount"
 import FormWrap from "./FormWrap"
 import Input from "./inputs/Input"
+import MenuItem from "./nav/MenuItem"
+import UserMenu from "./nav/UserMenu"
 
 export {
 	Navbar,
@@ -30,4 +32,6 @@ export {
 	CartCount,
 	FormWrap,
 	Input,
+	MenuItem,
+	UserMenu,
 }
