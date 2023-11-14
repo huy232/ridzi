@@ -2,15 +2,20 @@
 
 import Link from "next/link"
 import { Button, Heading, Input } from "../components"
-import { useState } from "react"
+import { useState, FC, useEffect } from "react"
 import { FieldValues, useForm, SubmitHandler } from "react-hook-form"
 import { AiOutlineGoogle } from "react-icons/ai"
 import axios from "axios"
 import toast from "react-hot-toast"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { SafeUser } from "@/types"
 
-const RegisterForm = () => {
+interface RegisterFormProps {
+	currentUser: SafeUser | null
+}
+
+const RegisterForm: FC<RegisterFormProps> = ({ currentUser }) => {
 	const router = useRouter()
 	const [isLoading, setIsLoading] = useState(false)
 	const {
@@ -52,6 +57,17 @@ const RegisterForm = () => {
 			})
 	}
 
+	useEffect(() => {
+		if (currentUser) {
+			router.push("/")
+			router.refresh()
+		}
+	}, [currentUser, router])
+
+	if (currentUser) {
+		return <p className="text-center">Logged in. Redirecting...</p>
+	}
+
 	return (
 		<>
 			<Heading title="Sign up" />
@@ -59,7 +75,9 @@ const RegisterForm = () => {
 				outline
 				label="Sign up with Google"
 				icon={AiOutlineGoogle}
-				onClick={() => {}}
+				onClick={() => {
+					signIn("google")
+				}}
 			/>
 			<hr className="bg-slate-300 w-full h-px" />
 			<Input

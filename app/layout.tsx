@@ -5,6 +5,7 @@ import { Navbar, Footer } from "@/app/components"
 import clsx from "clsx"
 import CartProvider from "@/providers/CartProvider"
 import { Toaster } from "react-hot-toast"
+import { getCurrentUser } from "@/actions/getCurrentUser"
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "700"] })
 
@@ -19,6 +20,7 @@ export default async function RootLayout({
 	children: React.ReactNode
 }) {
 	const bodyClass = clsx(poppins.className, "text-slate-700")
+	const currentUser = await getCurrentUser()
 	return (
 		<html lang="en">
 			<body className={bodyClass}>
@@ -32,7 +34,7 @@ export default async function RootLayout({
 				/>
 				<CartProvider>
 					<div className="flex flex-col min-h-screen">
-						<Navbar />
+						<Navbar currentUser={currentUser} />
 						<main className="flex-grow">{children}</main>
 						<Footer />
 					</div>

@@ -1,8 +1,13 @@
 import { CartCount, Container, UserMenu } from "@/app/components"
+import { SafeUser } from "@/types"
 import Link from "next/link"
-import { getCurrentUser } from "@/actions/getCurrentUser"
+import { FC } from "react"
 
-const Navbar = () => {
+interface NavbarProps {
+	currentUser: SafeUser | null
+}
+
+const Navbar: FC<NavbarProps> = async ({ currentUser }) => {
 	return (
 		<div className="sticky top-0 w-full bg-slate-200 z-30 shadow-sm">
 			<div className="py-4 border-b-[1px]">
@@ -14,7 +19,7 @@ const Navbar = () => {
 						<div className="hidden md:block">Search</div>
 						<div className="flex items-center gap-8 md:gap-12">
 							<CartCount />
-							<UserMenu />
+							<UserMenu currentUser={currentUser} />
 						</div>
 					</div>
 				</Container>

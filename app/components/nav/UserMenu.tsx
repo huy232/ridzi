@@ -7,7 +7,11 @@ import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { SafeUser } from "@/types"
 
-const UserMenu = () => {
+interface UserMenuProps {
+	currentUser: SafeUser | null
+}
+
+const UserMenu: FC<UserMenuProps> = ({ currentUser }) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const menuRef = useRef<HTMLDivElement | null>(null)
 
@@ -43,32 +47,34 @@ const UserMenu = () => {
 			</div>
 			{isOpen && (
 				<div className="absolute rounded-md shadow-md w-[170px] bg-white overflow-hidden right-0 top-12 text-sm flex flex-col cursor-pointer">
-					<div>
-						<Link href={"/orders"}>
-							<MenuItem onClick={toggleOpen}>Your orders</MenuItem>
-						</Link>
-						<Link href={"/admin"}>
-							<MenuItem onClick={toggleOpen}>Admin dashboard</MenuItem>
-						</Link>
-						<hr />
-						<MenuItem
-							onClick={() => {
-								toggleOpen()
-								signOut()
-							}}
-						>
-							Logout
-						</MenuItem>
-					</div>
-
-					<div>
-						<Link href={"/login"}>
-							<MenuItem onClick={toggleOpen}>Login</MenuItem>
-						</Link>
-						<Link href={"/register"}>
-							<MenuItem onClick={toggleOpen}>Sign up</MenuItem>
-						</Link>
-					</div>
+					{currentUser ? (
+						<div>
+							<Link href={"/orders"}>
+								<MenuItem onClick={toggleOpen}>Your orders</MenuItem>
+							</Link>
+							<Link href={"/admin"}>
+								<MenuItem onClick={toggleOpen}>Admin dashboard</MenuItem>
+							</Link>
+							<hr />
+							<MenuItem
+								onClick={() => {
+									toggleOpen()
+									signOut()
+								}}
+							>
+								Logout
+							</MenuItem>
+						</div>
+					) : (
+						<div>
+							<Link href={"/login"}>
+								<MenuItem onClick={toggleOpen}>Login</MenuItem>
+							</Link>
+							<Link href={"/register"}>
+								<MenuItem onClick={toggleOpen}>Sign up</MenuItem>
+							</Link>
+						</div>
+					)}
 				</div>
 			)}
 		</div>

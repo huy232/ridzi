@@ -2,14 +2,19 @@
 
 import Link from "next/link"
 import { Button, Heading, Input } from "../components"
-import { useState } from "react"
+import { useState, FC, useEffect } from "react"
 import { FieldValues, useForm, SubmitHandler } from "react-hook-form"
 import { AiOutlineGoogle } from "react-icons/ai"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
+import { SafeUser } from "@/types"
 
-const LoginForm = () => {
+interface LoginFormProps {
+	currentUser: SafeUser | null
+}
+
+const LoginForm: FC<LoginFormProps> = ({ currentUser }) => {
 	const router = useRouter()
 	const [isLoading, setIsLoading] = useState(false)
 	const {
@@ -44,6 +49,17 @@ const LoginForm = () => {
 			})
 	}
 
+	useEffect(() => {
+		if (currentUser) {
+			router.push("/")
+			router.refresh()
+		}
+	}, [currentUser, router])
+
+	if (currentUser) {
+		return <p className="text-center">Logged in. Redirecting...</p>
+	}
+
 	return (
 		<>
 			<Heading title="Sign in" />
@@ -51,7 +67,9 @@ const LoginForm = () => {
 				outline
 				label="Continue with Google"
 				icon={AiOutlineGoogle}
-				onClick={() => {}}
+				onClick={() => {
+					signIn("google")
+				}}
 			/>
 			<hr className="bg-slate-300 w-full h-px" />
 			<Input
