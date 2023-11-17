@@ -11,13 +11,15 @@ import { toast } from "react-hot-toast"
 type CartContextType = {
 	cartTotalQuantity: number
 	cartTotalAmount: number
-	cartProducts: CartProductType[] | null
+	cartProducts: CartProductType[]
 	handleAddProductToCart: (product: CartProductType) => void
 	loadingProducts: boolean
 	handleRemoveProductFromCart: (product: CartProductType) => void
 	handleCartQuantityIncrease: (product: CartProductType) => void
 	handleCartQuantityDecrease: (product: CartProductType) => void
 	handleClearCart: () => void
+	paymentIntent: string | null
+	handleSetPaymentIntent: (value: string | null) => void
 }
 
 export const CartContext = createContext<CartContextType | null>(null)
@@ -31,11 +33,15 @@ export const CartContextProvider = (props: Props) => {
 	const [cartProducts, setCartProducts] = useState<CartProductType[]>([])
 	const [cartTotalAmount, setCartTotalAmount] = useState(0)
 	const [loadingProducts, setLoadingProducts] = useState(true)
+	const [paymentIntent, setPaymentIntent] = useState<string | null>(null)
 
 	useEffect(() => {
 		const cartItems: any = localStorage.getItem("cartItems")
 		const cProducts: CartProductType[] | [] = JSON.parse(cartItems)
+		const eShopPaymentIntent: any = localStorage.getItem("paymentIntent")
+		const paymentIntent: string | null = JSON.parse(eShopPaymentIntent)
 		setCartProducts(cProducts || [])
+		setPaymentIntent(paymentIntent)
 		setLoadingProducts(false)
 	}, [])
 
@@ -144,6 +150,11 @@ export const CartContextProvider = (props: Props) => {
 		localStorage.setItem("cartItems", JSON.stringify(null))
 	}, [])
 
+	const handleSetPaymentIntent = useCallback((value: string | null) => {
+		setPaymentIntent(value)
+		localStorage.setItem("paymentIntent", JSON.stringify(value))
+	}, [])
+
 	const value = {
 		cartTotalQuantity,
 		cartTotalAmount,
@@ -154,6 +165,8 @@ export const CartContextProvider = (props: Props) => {
 		handleCartQuantityIncrease,
 		handleCartQuantityDecrease,
 		handleClearCart,
+		paymentIntent,
+		handleSetPaymentIntent,
 	}
 
 	return <CartContext.Provider value={value} {...props} />
