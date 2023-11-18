@@ -10,10 +10,10 @@ interface ButtonProps {
 	disabled?: boolean
 	outline?: boolean
 	small?: boolean
-	custom?: string
 	icon?: IconType
 	onClick?: (e: MouseEvent<HTMLButtonElement>) => void
 	loading?: boolean
+	className?: string
 }
 
 const Button: FC<ButtonProps> = ({
@@ -21,10 +21,10 @@ const Button: FC<ButtonProps> = ({
 	disabled,
 	outline,
 	small,
-	custom,
 	icon: Icon,
 	onClick,
 	loading,
+	className,
 }) => {
 	const buttonClass = clsx(
 		"disabled:opacity-70 disabled:cursor-not-allowed rounded-md hover:opacity-80 transition w-full border-slate-700 flex items-center justify-center gap-2",
@@ -32,7 +32,7 @@ const Button: FC<ButtonProps> = ({
 		small
 			? "text-sm py-1 px-2 font-light border-[1px]"
 			: "text-md py-3 px-4 font-semibold border-2",
-		custom
+		className
 	)
 	return (
 		<button onClick={onClick} disabled={disabled} className={buttonClass}>

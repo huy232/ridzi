@@ -25,6 +25,7 @@ const CheckoutForm: FC<CheckoutFormProps> = ({
 	const stripe = useStripe()
 	const elements = useElements()
 	const [isLoading, setIsLoading] = useState(true)
+	const [error, setError] = useState<string | undefined>()
 	const formattedPrice = formatPrice(cartTotalAmount)
 	useEffect(() => {
 		if (!stripe) {
@@ -42,18 +43,28 @@ const CheckoutForm: FC<CheckoutFormProps> = ({
 		if (!stripe || !elements) {
 			return
 		}
-		stripe
+		setIsLoading(false)
+
+		// Confirm the payment
+		await stripe
 			.confirmPayment({ elements, redirect: "if_required" })
 			.then((result) => {
 				if (!result.error) {
 					toast.success("Checkout success")
+					setError(undefined)
 					handleClearCart()
 					handleSetPaymentSuccess(true)
 					handleSetPaymentIntent(null)
 				}
+				if (result.error) {
+					setError(result.error.message)
+				}
+			})
+			.catch((err) => {
+				setError("An unexpected error occured")
 			})
 			.finally(() => {
-				setIsLoading(false)
+				setIsLoading(true)
 			})
 	}
 
@@ -71,7 +82,9 @@ const CheckoutForm: FC<CheckoutFormProps> = ({
 			<div className="py-4 text-center text-slate-700 text-4xl font-bold">
 				Total: {formattedPrice}
 			</div>
+			{error && <p className="text-center text-rose-500">{error}</p>}
 			<Button
+				className="h-[60px]"
 				label={!isLoading ? "Processing" : "Pay now"}
 				disabled={!isLoading || !stripe || !elements}
 				loading={!isLoading}

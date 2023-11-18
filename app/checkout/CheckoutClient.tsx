@@ -77,7 +77,7 @@ const CheckoutClient = () => {
 
 	return (
 		<div className="w-full">
-			{clientSecret && cartProducts && (
+			{clientSecret && cartProducts.length > 0 && (
 				<Elements options={options} stripe={stripePromise}>
 					<CheckoutForm
 						clientSecret={clientSecret}
