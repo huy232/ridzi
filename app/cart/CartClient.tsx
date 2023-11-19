@@ -8,6 +8,7 @@ import ItemContent from "./ItemContent"
 import { formatPrice } from "@/utils"
 import { FC } from "react"
 import { SafeUser } from "@/types"
+import { AiOutlineLoading3Quarters } from "react-icons/ai"
 
 interface CartClientProps {
 	currentUser: SafeUser | null
@@ -18,7 +19,12 @@ const CartClient: FC<CartClientProps> = ({ currentUser }) => {
 		useCart()
 
 	if (loadingProducts) {
-		return <div>Loading cart...</div>
+		return (
+			<div className="flex items-center justify-center">
+				<p className="px-1 text-xl">Loading cart...</p>
+				<AiOutlineLoading3Quarters className="animate-spin" size={24} />
+			</div>
+		)
 	} else {
 		if (!cartProducts || cartProducts.length === 0) {
 			return (
