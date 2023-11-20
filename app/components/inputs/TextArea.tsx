@@ -4,27 +4,25 @@ import clsx from "clsx"
 import { FC } from "react"
 import { UseFormRegister, FieldValues, FieldErrors } from "react-hook-form"
 
-interface InputProps {
+interface TextAreaProps {
 	id: string
 	label: string
-	type?: string
 	disabled?: boolean
 	required?: boolean
 	register: UseFormRegister<FieldValues>
 	errors: FieldErrors
 }
 
-const Input: FC<InputProps> = ({
+const TextArea: FC<TextAreaProps> = ({
 	id,
 	label,
-	type,
 	disabled,
 	required,
 	register,
 	errors,
 }) => {
 	const inputClass = clsx(
-		`peer w-full p-4 pt-6 outline-none bg-white font-light border-2 rounded-md transition disabled:opacity-70 disabled:cursor-not-allowed`,
+		`peer w-full p-4 pt-6 max-h-[150px] min-h-[150px] outline-none bg-white font-light border-2 rounded-md transition disabled:opacity-70 disabled:cursor-not-allowed`,
 		errors[id] ? "border-rose-400" : "border-slate-300",
 		errors[id] ? "focus:border-rose-400" : "focus:border-slate-300"
 	)
@@ -35,14 +33,12 @@ const Input: FC<InputProps> = ({
 	)
 
 	return (
-		<div className="w-full relative py-2">
-			<input
+		<div className="w-full relative">
+			<textarea
 				className={inputClass}
-				autoComplete="off"
 				id={id}
 				disabled={disabled}
 				placeholder=""
-				type={type}
 				{...register(id, { required })}
 			/>
 			<label htmlFor={id} className={labelClass}>
@@ -52,4 +48,4 @@ const Input: FC<InputProps> = ({
 	)
 }
 
-export default Input
+export default TextArea
