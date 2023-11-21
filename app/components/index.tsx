@@ -20,6 +20,8 @@ import AdminNavItem from "./admin/AdminNavItem"
 import NullData from "./NullData"
 import TextArea from "./inputs/TextArea"
 import CategoryInput from "./inputs/CategoryInput"
+import SelectColor from "./inputs/SelectColor"
+import SelectImage from "./inputs/SelectImage"
 
 export {
 	Navbar,
@@ -44,4 +46,6 @@ export {
 	NullData,
 	TextArea,
 	CategoryInput,
+	SelectColor,
+	SelectImage,
 }

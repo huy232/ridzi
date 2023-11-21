@@ -1,3 +1,5 @@
 export * from "./formatPrice"
 export * from "./truncateText"
 export * from "./productRating"
+export * from "./Categories"
+export * from "./Colors"

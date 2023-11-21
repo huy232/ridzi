@@ -1,13 +1,33 @@
 "use client"
 
-import { CategoryInput, Heading, Input, TextArea } from "@/app/components"
+import {
+	CategoryInput,
+	Heading,
+	Input,
+	SelectColor,
+	TextArea,
+} from "@/app/components"
 import CustomCheckbox from "@/app/components/inputs/CustomCheckbox"
-import { categories } from "@/utils/Categories"
-import { useState } from "react"
+import { categories, colors } from "@/utils"
+import { useState, useEffect, useCallback } from "react"
 import { FieldValues, useForm } from "react-hook-form"
+
+export type ImageType = {
+	color: string
+	colorCode: string
+	image: File | null
+}
+
+export type UploadImageType = {
+	color: string
+	colorCode: string
+	image: string
+}
 
 const AddProductForm = () => {
 	const [isLoading, setIsLoading] = useState(true)
+	const [images, setImages] = useState<ImageType[] | null>()
+	const [isProductCreated, setIsProductCreated] = useState(false)
 
 	const {
 		register,
@@ -27,15 +47,49 @@ const AddProductForm = () => {
 			price: "",
 		},
 	})
+	const setCustomValue = useCallback(
+		(id: string, value: any) => {
+			setValue(id, value, {
+				shouldValidate: true,
+				shouldDirty: true,
+				shouldTouch: true,
+			})
+		},
+		[setValue]
+	)
+
+	const addImageToState = useCallback((value: ImageType) => {
+		setImages((prev) => {
+			if (!prev) {
+				return [value]
+			}
+
+			return [...prev, value]
+		})
+	}, [])
+	const removeImageFromState = useCallback((value: ImageType) => {
+		setImages((prev) => {
+			if (prev) {
+				const filteredImages = prev.filter((item) => item.color !== value.color)
+				return filteredImages
+			}
+			return prev
+		})
+	}, [])
+
+	useEffect(() => {
+		setCustomValue("images", images)
+	}, [images, setCustomValue])
+
+	useEffect(() => {
+		if (isProductCreated) {
+			reset()
+			setImages(null)
+			setIsProductCreated(false)
+		}
+	}, [isProductCreated, reset])
 
 	const category = watch("category")
-	const setCustomValue = (id: string, value: any) => {
-		setValue(id, value, {
-			shouldValidate: true,
-			shouldDirty: true,
-			shouldTouch: true,
-		})
-	}
 	return (
 		<div>
 			<Heading title="Add a product" center />
@@ -93,6 +147,30 @@ const AddProductForm = () => {
 									icon={item.icon}
 								/>
 							</div>
+						)
+					})}
+				</div>
+			</div>
+			<div className="w-full flex flex-col flex-wrap gap-4">
+				<div>
+					<div className="font-bold">
+						Select the available product colors and upload their images.
+					</div>
+					<div className="text-sm">
+						You must upload an image for each of the color selected otherwise
+						your color selection will be ignored.
+					</div>
+				</div>
+				<div className="grid grid-cols-2 gap-3">
+					{colors.map((item, index) => {
+						return (
+							<SelectColor
+								key={index}
+								item={item}
+								addImageToState={addImageToState}
+								removeImageFromState={removeImageFromState}
+								isProductCreated={isProductCreated}
+							/>
 						)
 					})}
 				</div>
